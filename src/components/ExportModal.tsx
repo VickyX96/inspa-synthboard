@@ -1,0 +1,27 @@
+import { Check, Clipboard, Download, FileJson, Film, Image, PackageOpen, X } from 'lucide-react'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useUIStore } from '../stores/uiStore'
+import { downloadProject, exportEmbedZip, exportStill, recordVideo } from '../features/export/exporters'
+import { createProjectSnapshot } from '../features/projects/db'
+
+type Tab = 'image' | 'video' | 'project' | 'embed'
+export function ExportModal() {
+  const open = useUIStore((s) => s.exportOpen), setOpen = useUIStore((s) => s.setExportOpen), [tab, setTab] = useState<Tab>('image'), [busy, setBusy] = useState(false), [message, setMessage] = useState(''), [copied, setCopied] = useState(false)
+  const run = async (fn: () => Promise<unknown> | unknown) => { setBusy(true); setMessage(''); try { await fn(); setMessage('Export created successfully.') } catch (e) { setMessage(e instanceof Error ? e.message : 'Export failed.') } finally { setBusy(false) } }
+  const code = `<script type="module" src="./inspa-synthboard-player.js"></script>\n<inspa-synthboard-player\n  pattern="./pattern.json"\n  audio-selector="#site-audio"\n  loop="true" interaction="true">\n</inspa-synthboard-player>`
+  return <AnimatePresence>{open && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onMouseDown={(e) => e.target === e.currentTarget && setOpen(false)}>
+    <motion.div className="export-modal" role="dialog" aria-modal="true" aria-labelledby="export-title" initial={{ opacity: 0, y: 18, scale: .98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12 }}>
+      <header><div><p className="eyebrow">Render & distribute</p><h2 id="export-title">Export pattern</h2></div><button onClick={() => setOpen(false)}><X size={18} /></button></header>
+      <div className="export-body"><nav>{([['image', Image, 'Still image'], ['video', Film, 'Video'], ['project', FileJson, 'Project file'], ['embed', PackageOpen, 'Live embed']] as const).map(([id, Icon, label]) => <button key={id} className={tab === id ? 'active' : ''} onClick={() => setTab(id)}><Icon size={15} /><span>{label}</span></button>)}</nav>
+        <section className="export-content">
+          {tab === 'image' && <><div className="export-preview"><div className="preview-pattern"><span>LIVE FRAME</span></div></div><h3>Still image</h3><p>Capture the current procedural frame from the live canvas.</p><div className="export-grid"><label>Format<select id="still-format"><option value="png">PNG</option><option value="jpeg">JPEG</option><option value="webp">WebP</option></select></label><label>Resolution<select><option>1920 × 1080</option><option>1080 × 1080</option><option>1080 × 1920</option><option>2560 × 1440</option><option>3840 × 2160</option></select></label></div><button className="primary-button export-action" disabled={busy} onClick={() => run(() => exportStill((document.querySelector<HTMLSelectElement>('#still-format')?.value ?? 'png') as 'png'))}><Download size={15} /> Export current frame</button></>}
+          {tab === 'video' && <><div className="video-card"><Film size={25} /><span><b>WebM · 30 FPS</b><small>Browser-native canvas capture</small></span></div><h3>Video clip</h3><p>Record an 8-second synchronized clip. Keep the audio playing while capture runs.</p><div className="export-grid"><label>Duration<select><option>8 seconds</option></select></label><label>Codec<select><option>Best supported WebM</option></select></label></div><button className="primary-button export-action" disabled={busy} onClick={() => run(() => recordVideo(8))}><Film size={15} /> {busy ? 'Recording…' : 'Record 8-second clip'}</button></>}
+          {tab === 'project' && <><div className="project-export-icon"><FileJson size={34} /></div><h3>Portable project file</h3><p>Exports generator settings, mappings, sequencer lanes, appearance, and cached analysis. Audio is excluded to keep the file portable.</p><div className="filename-readout">{createProjectSnapshot().name.toLowerCase().replaceAll(' ', '-')}.inspa-synthboard.json</div><button className="primary-button export-action" onClick={() => { downloadProject(); setMessage('Project file exported.') }}><Download size={15} /> Export project</button></>}
+          {tab === 'embed' && <><div className="embed-preview"><div><span>DESKTOP HERO</span><i /><i /><i /></div></div><h3>Live website embed</h3><p>Package this pattern as a procedural Web Component. It can bind to an existing HTML audio element and requires no React runtime.</p><pre><code>{code}</code><button onClick={async () => { await navigator.clipboard.writeText(code); setCopied(true) }}>{copied ? <Check size={13} /> : <Clipboard size={13} />}</button></pre><div className="embed-options"><label><input type="checkbox" defaultChecked /> Pointer interaction</label><label><input type="checkbox" defaultChecked /> Pause offscreen</label><label><input type="checkbox" defaultChecked /> Reduced motion</label></div><button className="primary-button export-action" disabled={busy} onClick={() => run(exportEmbedZip)}><PackageOpen size={15} /> Build embed package (.zip)</button></>}
+          {message && <div className={message.includes('success') || message.includes('exported') ? 'success-message' : 'error-banner'}>{message}</div>}
+        </section>
+      </div>
+    </motion.div>
+  </motion.div>}</AnimatePresence>
+}
