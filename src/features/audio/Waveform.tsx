@@ -20,13 +20,13 @@ export function Waveform() {
     const count = analysis.waveform.length
     for (let i = 0; i < count; i++) {
       const x = i / count * w, amp = analysis.waveform[i] * h * .42
-      ctx.fillStyle = i / count <= progress ? '#b8322a' : '#4a4a4d'
+      ctx.fillStyle = i / count <= progress ? '#f2f2f2' : '#4a4a4d'
       ctx.fillRect(x, middle - amp, Math.max(1, w / count - .7), amp * 2)
     }
     const beatGap = 60 / analysis.bpm
     ctx.strokeStyle = 'rgba(255,255,255,.09)'; ctx.lineWidth = 1
     for (let t = 0; t < duration; t += beatGap * 4) { const x = t / duration * w; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke() }
-    const x = progress * w; ctx.strokeStyle = '#f04436'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke()
+    const x = progress * w; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke()
   }, [analysis, currentTime, duration])
 
   return <canvas ref={canvasRef} className="waveform-canvas" aria-label="Audio waveform. Click to seek." onPointerDown={(e) => {

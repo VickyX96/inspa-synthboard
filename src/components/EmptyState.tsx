@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { AudioWaveform, CirclePlay, Clock3, Radio, ShieldCheck } from 'lucide-react'
+import { CirclePlay, Clock3, Radio, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import { UploadButton } from './common/UploadButton'
 import { audioEngine } from '../features/audio/audioEngine'
@@ -13,7 +13,7 @@ export function EmptyState() {
     <motion.section className="empty-hero" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .45 }}>
       <div className="hero-graphic" aria-hidden="true">
         <span className="orbit orbit-a" /><span className="orbit orbit-b" /><span className="orbit orbit-c" />
-        <div className="hero-mark"><AudioWaveform size={30} /></div>
+        <div className="hero-mark"><img src="/assets/dispatch-mark.png" alt="Inspa Synthboard" /></div>
       </div>
       <p className="eyebrow"><span /> Procedural audio instrument</p>
       <h1>Turn sound into a<br /><em>living pattern.</em></h1>

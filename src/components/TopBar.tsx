@@ -1,4 +1,4 @@
-import { Check, Download, Redo2, Save, Settings2, Undo2, Waves } from 'lucide-react'
+import { Check, Download, Redo2, Save, Settings2, Undo2 } from 'lucide-react'
 import { usePatternStore } from '../stores/patternStore'
 import { usePlaybackStore } from '../stores/playbackStore'
 import { useProjectStore } from '../stores/projectStore'
@@ -10,7 +10,7 @@ export function TopBar() {
   const project = useProjectStore(), playback = usePlaybackStore(), history = usePatternStore((s) => s.history), future = usePatternStore((s) => s.future)
   const undo = usePatternStore((s) => s.undo), redo = usePatternStore((s) => s.redo)
   return <header className="topbar">
-    <div className="brand"><span className="brand-icon"><Waves size={15} /></span><span>INSPA</span><b>SYNTHBOARD</b></div>
+    <div className="brand"><span className="brand-icon"><img src="/assets/dispatch-mark.png" alt="" /></span><span>INSPA</span><b>SYNTHBOARD</b></div>
     <div className="top-divider" />
     <input className="project-name" aria-label="Project name" value={project.name} onChange={(e) => project.setName(e.target.value)} />
     <div className="history-controls">

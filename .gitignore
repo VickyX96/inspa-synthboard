@@ -1,1 +1,9 @@
-.vercel
+node_modules/
+dist/
+.vercel/
+work/
+outputs/
+*.log
+.env
+.env.*
+!.env.example

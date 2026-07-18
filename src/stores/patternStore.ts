@@ -3,10 +3,10 @@ import type { AppearanceSettings, AudioMapping, ParameterValue } from '../types'
 import { getPatternGenerator } from '../features/patterns/registry'
 
 export const palettes: Record<string, AppearanceSettings> = {
-  Graphite: { background: '#09090a', primary: '#f0eee9', secondary: '#747474', accent: '#ef3d2f', glow: .16, grain: .1, vignette: .24 },
-  'Signal Red': { background: '#100a0a', primary: '#ff4a3d', secondary: '#701d1a', accent: '#fff0ea', glow: .24, grain: .12, vignette: .3 },
-  Ice: { background: '#071015', primary: '#d7fbff', secondary: '#3f8091', accent: '#72deef', glow: .22, grain: .08, vignette: .18 },
-  Ultraviolet: { background: '#0c0712', primary: '#d9bdff', secondary: '#633d80', accent: '#f158ff', glow: .25, grain: .1, vignette: .26 },
+  Graphite: { background: '#050505', primary: '#f5f5f5', secondary: '#777777', accent: '#ffffff', glow: .12, grain: .1, vignette: .24 },
+  'High Contrast': { background: '#000000', primary: '#ffffff', secondary: '#555555', accent: '#d8d8d8', glow: .18, grain: .12, vignette: .3 },
+  Ice: { background: '#080808', primary: '#eeeeee', secondary: '#8c8c8c', accent: '#ffffff', glow: .15, grain: .08, vignette: .18 },
+  Ultraviolet: { background: '#030303', primary: '#ffffff', secondary: '#646464', accent: '#bdbdbd', glow: .17, grain: .1, vignette: .26 },
 }
 
 interface Snapshot { generatorId: string; parameters: Record<string, ParameterValue>; appearance: AppearanceSettings }
